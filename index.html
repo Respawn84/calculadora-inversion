@@ -3,20 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculadora de inversión para analizar operaciones de trading con comisiones personalizables">
     <title>Calculadora de Inversión</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
             background-color: #f5f5f5;
+            line-height: 1.6;
         }
+        
+        @media (min-width: 768px) {
+            body {
+                padding: 30px;
+            }
+        }
+        
         .container {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                padding: 40px;
+            }
         }
         h1 {
             color: #2c3e50;
@@ -38,20 +53,46 @@
         }
         .input-group {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 8px;
             margin-bottom: 15px;
         }
+        
+        @media (min-width: 768px) {
+            .input-group {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 15px;
+            }
+        }
+        
         label {
             font-weight: bold;
-            min-width: 200px;
+            color: #2c3e50;
         }
+        
         input {
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 120px;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 200px;
             text-align: right;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        @media (min-width: 768px) {
+            input {
+                width: 150px;
+            }
         }
         .euro::after {
             content: " €";
@@ -81,18 +122,62 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            font-size: 14px;
         }
+        
+        @media (min-width: 768px) {
+            table {
+                font-size: 16px;
+            }
+        }
+        
         th, td {
-            padding: 10px;
+            padding: 12px 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            word-wrap: break-word;
         }
+        
+        @media (min-width: 768px) {
+            th, td {
+                padding: 15px 12px;
+            }
+        }
+        
         th {
             background-color: #3498db;
             color: white;
+            font-size: 13px;
         }
+        
+        @media (min-width: 768px) {
+            th {
+                font-size: 16px;
+            }
+        }
+        
         .number {
             text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        /* Mejorar legibilidad en móviles */
+        @media (max-width: 767px) {
+            .section {
+                margin-bottom: 20px;
+                padding: 15px;
+            }
+            
+            .section h3 {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>

@@ -1,0 +1,16 @@
+{
+  "name": "Calculadora de Inversión",
+  "short_name": "CalcInv",
+  "description": "Calculadora para analizar operaciones de trading",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#3498db",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
