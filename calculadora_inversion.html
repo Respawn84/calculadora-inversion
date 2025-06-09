@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Inversión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .section h3 {
+            color: #34495e;
+            margin-top: 0;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            min-width: 200px;
+        }
+        input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 120px;
+            text-align: right;
+        }
+        .euro::after {
+            content: " €";
+        }
+        .resultado {
+            background-color: #e8f6f3;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .resultado-destacado {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 10px 0;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 10px 0;
+            color: #721c24;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        .number {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Calculadora de Inversión</h1>
+        
+        <div class="section">
+            <h3>🎯 Parámetros de la Operación</h3>
+            <div class="input-group">
+                <label>Precio de Compra:</label>
+                <input type="number" id="precioCompra" value="10.375" step="0.001" oninput="calcular()">
+            </div>
+            <div class="input-group">
+                <label>Precio Objetivo:</label>
+                <input type="number" id="precioObjetivo" value="11.000" step="0.001" oninput="calcular()">
+            </div>
+            <div class="input-group">
+                <label>Beneficio Objetivo Neto:</label>
+                <input type="number" id="beneficioObjetivo" value="30" step="0.01" oninput="calcular()">
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>💰 Comisiones y Gastos</h3>
+            <div class="input-group">
+                <label>Comisión de Entrada:</label>
+                <input type="number" id="comisionEntrada" value="8.7" step="0.01" oninput="calcular()">
+            </div>
+            <div class="input-group">
+                <label>Comisión de Salida:</label>
+                <input type="number" id="comisionSalida" value="0" step="0.01" oninput="calcular()">
+            </div>
+            <div class="input-group">
+                <label>Otros Gastos:</label>
+                <input type="number" id="otrosGastos" value="0" step="0.01" oninput="calcular()">
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>📈 Resultados del Cálculo</h3>
+            <div id="resultados"></div>
+        </div>
+
+        <div class="section">
+            <h3>📋 Resumen de la Operación</h3>
+            <div id="resumen"></div>
+        </div>
+    </div>
+
+    <script>
+        function calcular() {
+            const precioCompra = parseFloat(document.getElementById('precioCompra').value) || 0;
+            const precioObjetivo = parseFloat(document.getElementById('precioObjetivo').value) || 0;
+            const beneficioObjetivo = parseFloat(document.getElementById('beneficioObjetivo').value) || 0;
+            const comisionEntrada = parseFloat(document.getElementById('comisionEntrada').value) || 0;
+            const comisionSalida = parseFloat(document.getElementById('comisionSalida').value) || 0;
+            const otrosGastos = parseFloat(document.getElementById('otrosGastos').value) || 0;
+
+            const resultadosDiv = document.getElementById('resultados');
+            const resumenDiv = document.getElementById('resumen');
+
+            // Validaciones
+            if (precioCompra <= 0 || precioObjetivo <= 0) {
+                resultadosDiv.innerHTML = '<div class="error">⚠️ Por favor, introduce precios válidos</div>';
+                resumenDiv.innerHTML = '';
+                return;
+            }
+
+            if (precioObjetivo <= precioCompra) {
+                resultadosDiv.innerHTML = '<div class="error">⚠️ El precio objetivo debe ser mayor que el precio de compra</div>';
+                resumenDiv.innerHTML = '';
+                return;
+            }
+
+            // Cálculos
+            const beneficioPorAccion = precioObjetivo - precioCompra;
+            const costesTotal = comisionEntrada + comisionSalida + otrosGastos;
+            const beneficioBrutoNecesario = beneficioObjetivo + costesTotal;
+            const accionesNecesarias = Math.ceil(beneficioBrutoNecesario / beneficioPorAccion);
+            
+            // Recalcular con acciones redondeadas
+            const inversionInicial = accionesNecesarias * precioCompra;
+            const capitalTotal = inversionInicial + comisionEntrada + otrosGastos;
+            const valorFinal = accionesNecesarias * precioObjetivo;
+            const beneficioBrutoReal = valorFinal - inversionInicial;
+            const beneficioNetoReal = beneficioBrutoReal - costesTotal;
+            const rentabilidad = (beneficioNetoReal / capitalTotal) * 100;
+
+            // Mostrar resultados
+            resultadosDiv.innerHTML = `
+                <div class="resultado">
+                    <strong>Beneficio por acción:</strong> ${beneficioPorAccion.toFixed(3)}€
+                </div>
+                <div class="resultado">
+                    <strong>Costes totales:</strong> ${costesTotal.toFixed(2)}€
+                </div>
+                <div class="resultado">
+                    <strong>Beneficio bruto necesario:</strong> ${beneficioBrutoNecesario.toFixed(2)}€
+                </div>
+                <div class="resultado-destacado">
+                    <strong>ACCIONES NECESARIAS: ${accionesNecesarias}</strong>
+                </div>
+            `;
+
+            // Mostrar resumen
+            resumenDiv.innerHTML = `
+                <table>
+                    <tr>
+                        <th>Concepto</th>
+                        <th class="number">Importe</th>
+                    </tr>
+                    <tr>
+                        <td>Inversión inicial (${accionesNecesarias} acciones × ${precioCompra}€)</td>
+                        <td class="number">${inversionInicial.toFixed(2)}€</td>
+                    </tr>
+                    <tr>
+                        <td>Comisión entrada</td>
+                        <td class="number">${comisionEntrada.toFixed(2)}€</td>
+                    </tr>
+                    <tr>
+                        <td>Otros gastos</td>
+                        <td class="number">${otrosGastos.toFixed(2)}€</td>
+                    </tr>
+                    <tr style="background-color: #f8f9fa; font-weight: bold;">
+                        <td><strong>CAPITAL TOTAL NECESARIO</strong></td>
+                        <td class="number"><strong>${capitalTotal.toFixed(2)}€</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="height: 10px; border: none;"></td>
+                    </tr>
+                    <tr>
+                        <td>Valor al objetivo (${accionesNecesarias} × ${precioObjetivo}€)</td>
+                        <td class="number">${valorFinal.toFixed(2)}€</td>
+                    </tr>
+                    <tr>
+                        <td>Beneficio bruto</td>
+                        <td class="number">${beneficioBrutoReal.toFixed(2)}€</td>
+                    </tr>
+                    <tr>
+                        <td>Comisión salida</td>
+                        <td class="number">-${comisionSalida.toFixed(2)}€</td>
+                    </tr>
+                    <tr style="background-color: #d4edda; font-weight: bold;">
+                        <td><strong>BENEFICIO NETO</strong></td>
+                        <td class="number"><strong>${beneficioNetoReal.toFixed(2)}€</strong></td>
+                    </tr>
+                    <tr style="background-color: #cce5ff; font-weight: bold;">
+                        <td><strong>RENTABILIDAD</strong></td>
+                        <td class="number"><strong>${rentabilidad.toFixed(2)}%</strong></td>
+                    </tr>
+                </table>
+            `;
+        }
+
+        // Calcular al cargar la página
+        calcular();
+    </script>
+</body>
+</html>
